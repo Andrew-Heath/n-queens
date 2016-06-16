@@ -41,33 +41,47 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var board = new Board({n: n});
-  var solutionCount = 0;
-  var walk = function(boardState, numRooks, row) {
-    var totalCol = n;
-    if (numRooks === n) {
-      solutionCount++;
-      return undefined;
-    }
-    var currentRow = board.get(row);
-    if (row === 0 && n % 2 === 0) {
-      totalCol = Math.ceil(totalCol / 2);
-    }
-    for (var col = 0; col < totalCol; col++) {    
-      if (!currentRow[col]) {
-        board.togglePiece(row, col);
-        if (board.hasAnyRooksConflicts()) {
-          board.togglePiece(row, col);
-        } else {
-          walk(boardState, numRooks + 1, row + 1);
-          board.togglePiece(row, col);
-        }
-      }
-    }
-  };
-  walk(board, 0, 0);
-  if (n > 1 && n % 2 === 0) {
-    solutionCount = solutionCount * 2;
+  // var board = new Board({n: n});
+  // var solutionCount = 0;
+  // var myWorker = new Worker('walkWorker.js');
+  // var walk = function(boardState, numRooks, row) {
+  //   var totalCol = n;
+  //   if (row < Math.floor(n / 2)) {
+  //     if (numRooks === n) {
+  //       solutionCount++;
+  //       return undefined;
+  //     }
+  //     var currentRow = board.get(row);
+  //     if (row === 0 && n % 2 === 0) {
+  //       totalCol = Math.ceil(totalCol / 2);
+  //     }
+  //     for (var col = 0; col < totalCol; col++) {    
+  //       if (!currentRow[col]) {
+  //         board.togglePiece(row, col);
+  //         if (board.hasAnyRooksConflicts()) {
+  //           board.togglePiece(row, col);
+  //         } else {
+  //           walk(boardState, numRooks + 1, row + 1);
+  //           board.togglePiece(row, col);
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
+  // myWorker.postMessage(board, 0, Math.ceil(n / 2));
+  // walk(board, 0, 0);
+  // myWorker.onmessage = function(e) {
+  //   solutionCount += e.data;
+  // };
+  // // worker would walk for lower half of board
+
+  // if (n > 1 && n % 2 === 0) {
+  //   solutionCount = solutionCount * 2;
+  // }
+
+  var solutionCount = 1;
+  for (var i = n; i > 1; i--) {
+    solutionCount *= i;
   }
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
