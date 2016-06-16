@@ -21,9 +21,9 @@ window.findNRooksSolution = function(n) {
     if (numRooks === n) {
       return board.rows();
     }
-    for (var row = 0; row < board.get('n'); row++) {
+    for (var row = 0; row < n; row++) {
       var currentRow = board.get(row);
-      for (var col = 0; col < board.get('n'); col++) {    
+      for (var col = 0; col < n; col++) {    
         if (!currentRow[col]) {
           board.togglePiece(row, col);
           if (board.hasAnyRooksConflicts()) {
@@ -51,7 +51,7 @@ window.countNRooksSolutions = function(n) {
       return undefined;
     }
     var currentRow = board.get(row);
-    for (var col = 0; col < board.get('n'); col++) {    
+    for (var col = 0; col < n; col++) {    
       if (!currentRow[col]) {
         board.togglePiece(row, col);
         if (board.hasAnyRooksConflicts()) {
@@ -84,7 +84,7 @@ window.findNQueensSolution = function(n) {
       return;
     }
     var currentRow = board.get(row);
-    for (var col = 0; col < board.get('n'); col++) {    
+    for (var col = 0; col < n; col++) {    
       if (!currentRow[col]) {
         board.togglePiece(row, col);
         if (board.hasAnyQueensConflicts()) {
@@ -112,12 +112,17 @@ window.countNQueensSolutions = function(n) {
   var board = new Board({n: n});
   var solutionCount = 0;
   var walk = function(boardState, numQueens, row) {
+    var totalCol = n;
+
     if (numQueens === n) {
       solutionCount++;
       return undefined;
     }
     var currentRow = board.get(row);
-    for (var col = 0; col < board.get('n'); col++) {    
+    if (row === 0 && n % 2 === 0) {
+      totalCol = Math.ceil(totalCol / 2);
+    }
+    for (var col = 0; col < totalCol; col++) {    
       if (!currentRow[col]) {
         board.togglePiece(row, col);
         if (board.hasAnyQueensConflicts()) {
@@ -130,6 +135,10 @@ window.countNQueensSolutions = function(n) {
     }
   };
   walk(board, 0, 0);
+  if (n > 1 && n % 2 === 0) {
+    solutionCount = solutionCount * 2;
+  }
+
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
