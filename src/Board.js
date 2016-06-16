@@ -43,10 +43,12 @@
 
     hasAnyQueenConflictsOn: function(rowIndex, colIndex) {
       return (
-        // this.hasRowConflictAt(rowIndex) ||
-        this.hasColConflictAt(colIndex, rowIndex + 1) ||
-        this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex)) ||
-        this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
+        //this.hasRowConflictAt(rowIndex) ||
+        this.hasColConflictAt(colIndex, rowIndex) ||
+        // this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex)) ||
+        // this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
+        this.majorDiaConflictAt(rowIndex, colIndex) ||
+        this.minorDiaConflictAt(rowIndex, colIndex)
       );
     },
 
@@ -109,16 +111,13 @@
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
-    hasColConflictAt: function(colIndex, rowEnd) {
-      var rows = this.rows();
-      var found = false;
-      var n = rowEnd || this.get('n');
-      for (var i = 0; i < n; i++) {
-        if (rows[i][colIndex]) {
-          if (found) {
-            return true;
-          }
-          found = true;
+    hasColConflictAt: function(col, row) {
+      var board = this.rows();
+      var n = this.get('n') || row;
+      row--;
+      for (; row >= 0; row--) {
+        if (board[row][col]) {
+          return true;
         }
       }
       return false;
@@ -197,6 +196,30 @@
         if (this.hasMinorDiagonalConflictAt(i)) {
           return true;
         } 
+      }
+      return false;
+    },
+
+    majorDiaConflictAt: function(row, col) {
+      var board = this.rows();
+      row--;
+      col--;
+      for (; this._isInBounds(row, col); row--, col--) {
+        if (board[row][col]) {
+          return true;
+        }
+      }
+      return false;
+    },
+
+    minorDiaConflictAt: function(row, col) {
+      var board = this.rows();
+      row--;
+      col++;
+      for (; this._isInBounds(row, col); row--, col++) {
+        if (board[row][col]) {
+          return true;
+        }
       }
       return false;
     }
