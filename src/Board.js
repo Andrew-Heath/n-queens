@@ -43,8 +43,8 @@
 
     hasAnyQueenConflictsOn: function(rowIndex, colIndex) {
       return (
-        this.hasRowConflictAt(rowIndex) ||
-        this.hasColConflictAt(colIndex) ||
+        // this.hasRowConflictAt(rowIndex) ||
+        this.hasColConflictAt(colIndex, rowIndex + 1) ||
         this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex)) ||
         this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
       );
@@ -109,10 +109,10 @@
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
-    hasColConflictAt: function(colIndex) {
+    hasColConflictAt: function(colIndex, rowEnd) {
       var rows = this.rows();
       var found = false;
-      var n = this.get('n');
+      var n = rowEnd || this.get('n');
       for (var i = 0; i < n; i++) {
         if (rows[i][colIndex]) {
           if (found) {

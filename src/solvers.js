@@ -144,7 +144,7 @@ window.countNQueensSolutions = function(n) {
     for (var col = 0; col < totalCol; col++) {    
       if (!currentRow[col]) {
         board.togglePiece(row, col);
-        if (board.hasAnyQueensConflicts()) {
+        if (board.hasAnyQueenConflictsOn(row, col)) {
           board.togglePiece(row, col);
         } else {
           walk(boardState, numQueens + 1, row + 1);
