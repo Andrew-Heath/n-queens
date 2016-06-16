@@ -44,7 +44,7 @@
     hasAnyQueenConflictsOn: function(rowIndex, colIndex) {
       return (
         //this.hasRowConflictAt(rowIndex) ||
-        this.hasColConflictAt(colIndex, rowIndex) ||
+        this.colConflictAt(rowIndex, colIndex) ||
         // this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex)) ||
         // this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
         this.majorDiaConflictAt(rowIndex, colIndex) ||
@@ -111,13 +111,16 @@
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
-    hasColConflictAt: function(col, row) {
+    hasColConflictAt: function(colIndex, rowEnd) {
       var board = this.rows();
-      var n = this.get('n') || row;
-      row--;
-      for (; row >= 0; row--) {
-        if (board[row][col]) {
-          return true;
+      var found = false;
+      var n = this.get('n');
+      for (var i = 0; i < n; i++) {
+        if (board[i][colIndex]) {
+          if (found) {
+            return true;
+          }
+          found = true;
         }
       }
       return false;
@@ -217,6 +220,16 @@
       row--;
       col++;
       for (; this._isInBounds(row, col); row--, col++) {
+        if (board[row][col]) {
+          return true;
+        }
+      }
+      return false;
+    }, 
+    colConflictAt: function(row, col) {
+      var board = this.rows();
+      row--;
+      for (; row >= 0; row--) {
         if (board[row][col]) {
           return true;
         }
